@@ -68,10 +68,7 @@ namespace Yatla
 			}
 
 			var task_index = 0;
-<<<<<<< HEAD
 			uint the_longest_task = 0;
-=======
->>>>>>> 26ab0a2836db4886ba046921351da223d87fb73d
 			while (task_index != sidebar.sidebar_list.nth_data (list_index).size )
 			{
 				var task_id   = sidebar.sidebar_list.nth_data (list_index).tasks.nth_data (task_index).id;
