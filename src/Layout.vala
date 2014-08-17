@@ -68,6 +68,7 @@ namespace Yatla
 			}
 
 			var task_index = 0;
+			uint the_longest_task = 0;
 			while (task_index != sidebar.sidebar_list.nth_data (list_index).size )
 			{
 				var task_id   = sidebar.sidebar_list.nth_data (list_index).tasks.nth_data (task_index).id;
@@ -83,6 +84,9 @@ namespace Yatla
 
 				var task = new Yatla.Task (task_name, task_note, task_date, task_is_done);
 				task.id = task_id;
+
+				/** check for the longest task to get horizontal slider if needed */
+				if (task_name.length > the_longest_task)		the_longest_task = task_name.length;
 
 				var checkBox = new Gtk.CheckButton.with_label (task_name);
 				checkBox.set_active (task_is_done);
@@ -106,6 +110,7 @@ namespace Yatla
 			put (_top_box1,  25, 20);
 			put (_top_box2,  20, 40);
 			put (_tasks_box, 20, 100);
+			width  = 65  + the_longest_task * 7;
 			height = 100 + tasks.values.size * 30;
 			show_all ();
 
