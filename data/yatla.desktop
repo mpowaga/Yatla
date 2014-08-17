@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Yatla
+Version=0.1
+GenericName=Yatla
+Comment=the best to-do list app
+Categories=GTK;Utility;
+Exec=yatla
+Icon=application-default-icon
+Terminal=false
+Type=Application
+X-GNOME-Gettext-Domain=yatla
+X-GNOME-Keywords=yatla;to-do;list;
