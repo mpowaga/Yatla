@@ -1,0 +1,22 @@
+                                                Tasks
+
+ ☐ make the code more efficient, BACKUP SUCKS
+ ☐ when you create a task, make sure, task name doesn't repeat
+ ☐ add horizontal scrolling
+ ☐ resize signal check_resize.connect ()
+ ☐ add the notification's pop ups
+ ☐ solve the problem with importing the database (the problem is after import, i select an item an it writes that gtk_container_remove couldn't be done, still the programm works normally)
+ ☐ find out how to use Gdk.EventConfigure
+ ☐ add a button which calls task_preferences, only when tooltip opens
+ ☐ task_preference two types: 1) to create a task 
+                               2) to edit a task
+ ☐ create transition for sidebar (Gtk.Stack)
+
+＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿＿
+Archive:
+ ✔ tooltips are shown even if tooltip.text is "" @done (14-08-17 16:23)
+ ✔ make scrolling possible @done (14-08-17 15:41)
+ ✔ save the data, before clearing the layout @done (14-08-14 20:00)
+ ✔ fix bug with renaming (after renaming the text is not marked up) @done (14-08-14 14:14)
+ ✔ make dialog, where you can create a task  @done (14-08-13 16:26)
+ ✔ create listName_tasks tables in databases @done (14-08-13 16:26)
