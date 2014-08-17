@@ -376,4 +376,8 @@ namespace Yatla
             preferencesDialog.show_all ();
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 26ab0a2836db4886ba046921351da223d87fb73d

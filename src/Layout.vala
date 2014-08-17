@@ -68,7 +68,10 @@ namespace Yatla
 			}
 
 			var task_index = 0;
+<<<<<<< HEAD
 			uint the_longest_task = 0;
+=======
+>>>>>>> 26ab0a2836db4886ba046921351da223d87fb73d
 			while (task_index != sidebar.sidebar_list.nth_data (list_index).size )
 			{
 				var task_id   = sidebar.sidebar_list.nth_data (list_index).tasks.nth_data (task_index).id;
@@ -85,9 +88,12 @@ namespace Yatla
 				var task = new Yatla.Task (task_name, task_note, task_date, task_is_done);
 				task.id = task_id;
 
+<<<<<<< HEAD
 				/** check for the longest task to get horizontal slider if needed */
 				if (task_name.length > the_longest_task)		the_longest_task = task_name.length;
 
+=======
+>>>>>>> 26ab0a2836db4886ba046921351da223d87fb73d
 				var checkBox = new Gtk.CheckButton.with_label (task_name);
 				checkBox.set_active (task_is_done);
 				checkBox.has_tooltip = true;
@@ -110,7 +116,10 @@ namespace Yatla
 			put (_top_box1,  25, 20);
 			put (_top_box2,  20, 40);
 			put (_tasks_box, 20, 100);
+<<<<<<< HEAD
 			width  = 65  + the_longest_task * 7;
+=======
+>>>>>>> 26ab0a2836db4886ba046921351da223d87fb73d
 			height = 100 + tasks.values.size * 30;
 			show_all ();
 
@@ -178,4 +187,8 @@ namespace Yatla
             _list_name.set_markup ("""<span font='14'><b>%s</b></span>""".printf (_list_name.get_text ()));
 		}
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 26ab0a2836db4886ba046921351da223d87fb73d

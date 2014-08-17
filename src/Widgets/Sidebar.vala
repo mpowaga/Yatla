@@ -71,4 +71,8 @@ namespace Yatla
 			this.badge = (badge > 0) ? badge.to_string () : null;
 		}
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 26ab0a2836db4886ba046921351da223d87fb73d
