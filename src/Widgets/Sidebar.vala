@@ -35,7 +35,8 @@ namespace Yatla
 			sidebar_list.nth_data (list_index).tasks.append (task);
 			
             foreach (Granite.Widgets.SourceList.Item item in root.children)
-            {   if (item.name == list_name)
+            {   
+            	if (item.name == list_name)
             	{
 					if (item.badge == null)		item.badge = "1";
 					else 						item.badge = (int.parse(item.badge) + 1).to_string ();  
@@ -77,13 +78,14 @@ namespace Yatla
             {
             	if (task.id == task_to_remove.id)
             	{
-            		sidebar_list.nth_data (list_index).tasks.remove (task_to_remove);
+            		sidebar_list.nth_data (list_index).tasks.remove (task);
             		break;
             	}
             }
 
 			foreach (Granite.Widgets.SourceList.Item item in root.children)
-            {   if (item.name == list_name)
+            {   
+            	if (item.name == list_name)
             	{
 					if (item.badge == "1")		item.badge = null;
 					else 						item.badge = (int.parse(item.badge) - 1).to_string ();  
@@ -102,10 +104,13 @@ namespace Yatla
 
 			for (uint task_index = 0; task_index < tasks.length; task_index++) 
 			{
-				sidebar_list.nth_data (list_index).tasks.nth_data (task_index).name    = tasks[task_index].name;
-				sidebar_list.nth_data (list_index).tasks.nth_data (task_index).note    = tasks[task_index].note;
-				sidebar_list.nth_data (list_index).tasks.nth_data (task_index).date    = tasks[task_index].date;
-				sidebar_list.nth_data (list_index).tasks.nth_data (task_index).is_done = tasks[task_index].is_done;
+				if (sidebar_list.nth_data (list_index).tasks.nth_data (task_index).id == tasks[task_index].id)
+				{
+					sidebar_list.nth_data (list_index).tasks.nth_data (task_index).name    = tasks[task_index].name;
+					sidebar_list.nth_data (list_index).tasks.nth_data (task_index).note    = tasks[task_index].note;
+					sidebar_list.nth_data (list_index).tasks.nth_data (task_index).date    = tasks[task_index].date;
+					sidebar_list.nth_data (list_index).tasks.nth_data (task_index).is_done = tasks[task_index].is_done;
+				}
 			}
 		}
 	}

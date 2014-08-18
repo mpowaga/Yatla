@@ -454,10 +454,35 @@ namespace Yatla
 			}
 		}
 
+		/**
+		 * @brief   remove task from the database
+		 * 
+		 * @param task      : task, which will be removed
+		 * @param list_name : name of the list, from which
+		 *                    task will be removed
+		 * 
+		 * @return true  : if removing was successful
+		 *         false : if removing wasn't successful
+		 */
 		public bool remove_task (Yatla.Task task, string list_name)
 		{
-			// removing a task from a list
-			return true;
+			try 
+			{
+				var sql_command = "DELETE FROM `" + list_name + "_tasks` WHERE id = (:id);";
+				_transaction = _database.begin_transaction ();
+				_query = _transaction.prepare (sql_command);
+				_query[":id"] = task.id;
+
+				_query.execute ();
+				_transaction.commit ();
+				return true;
+			} 
+			catch (SQLHeavy.Error e) 
+			{
+				stdout.printf ("Error deleing the task");
+				stdout.printf ("Error : %s\n", e.message);
+				return false;	
+			}
 		}
 
 		/**

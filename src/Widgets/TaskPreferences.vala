@@ -27,7 +27,7 @@ namespace Yatla
 		private  Gtk.Button 				 _change_button;
 		private  TaskPreferencesType         _type;
 	
-		/** index is the index in sidebar.sidebar_list */
+	
 		public TaskPreferences(TaskPreferencesType type, Yatla.Layout layout, Yatla.Database database, 
 							   Yatla.Sidebar sidebar, Yatla.Task task, string list_name) 
 		{	
@@ -63,16 +63,7 @@ namespace Yatla
 
 			var notification_label = create_preferences_label ("Notification:");
 			_notification_switcher  = new Gtk.Switch ();
-			if (_type == Yatla.TaskPreferencesType.CREATE)
-			{
-				_notification_switcher.set_active (true);
-			}
-			else 
-			{
-				if (task.date == null)	_notification_switcher.set_active (false);
-				else 					_notification_switcher.set_active (true);
-			}
-			
+
 			var box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 20); // because without it, it looks terrible
 			box.pack_start (notification_label);
 			box.pack_start (_notification_switcher);
@@ -98,6 +89,23 @@ namespace Yatla
 			content.set_margin_left	   (10);
 			content.set_margin_right   (10);
 			content.set_margin_bottom  (5);
+
+			if (_type == Yatla.TaskPreferencesType.CREATE)
+			{
+				_notification_switcher.set_active (true);
+			}
+			else 
+			{
+				if (task.date == null)
+				{
+					_notification_switcher.set_active (false);
+					date_label.set_sensitive   (false);
+					_date_picker.set_sensitive (false);
+					time_label.set_sensitive   (false);
+					_time_picker.set_sensitive (false);
+				}	
+				else 	_notification_switcher.set_active (true);
+			}
 
 			_notification_switcher.notify["active"].connect (() => 
 			{
