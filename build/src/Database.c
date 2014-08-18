@@ -132,6 +132,7 @@ gboolean yatla_database_remove_list (YatlaDatabase* self, YatlaList* list);
 gboolean yatla_database_rename_list (YatlaDatabase* self, YatlaList* list, const gchar* new_name);
 gboolean yatla_database_add_task (YatlaDatabase* self, YatlaTask* task, const gchar* list_name);
 gint yatla_database_get_task_id (YatlaDatabase* self, const gchar* task_name, const gchar* list_name);
+gboolean yatla_database_update_task (YatlaDatabase* self, YatlaTask* task, const gchar* list_name);
 gboolean yatla_database_remove_task (YatlaDatabase* self, YatlaTask* task, const gchar* list_name);
 gchar* yatla_database_get_location (void);
 static void yatla_database_finalize (GObject* obj);
@@ -3239,6 +3240,816 @@ gint yatla_database_get_task_id (YatlaDatabase* self, const gchar* task_name, co
  * @return true  : if updating was successful
  *         false : if updating wasn't successful
  */
+gboolean yatla_database_update_task (YatlaDatabase* self, YatlaTask* task, const gchar* list_name) {
+	gboolean result = FALSE;
+	GError * _inner_error_ = NULL;
+	g_return_val_if_fail (self != NULL, FALSE);
+	g_return_val_if_fail (task != NULL, FALSE);
+	g_return_val_if_fail (list_name != NULL, FALSE);
+	{
+		gchar* sql_command = NULL;
+		const gchar* _tmp0_ = NULL;
+		gchar* _tmp1_ = NULL;
+		gchar* _tmp2_ = NULL;
+		gchar* _tmp3_ = NULL;
+		gchar* _tmp4_ = NULL;
+		SQLHeavyQuery* _tmp5_ = NULL;
+		SQLHeavyDatabase* _tmp6_ = NULL;
+		const gchar* _tmp7_ = NULL;
+		SQLHeavyQuery* _tmp8_ = NULL;
+		SQLHeavyQuery* _tmp9_ = NULL;
+		SQLHeavyQuery* _tmp10_ = NULL;
+		YatlaTask* _tmp11_ = NULL;
+		gint _tmp12_ = 0;
+		gint _tmp13_ = 0;
+		GValue* _tmp14_ = NULL;
+		SQLHeavyQueryResult* results = NULL;
+		SQLHeavyQuery* _tmp15_ = NULL;
+		SQLHeavyQueryResult* _tmp16_ = NULL;
+		gchar* task_name = NULL;
+		SQLHeavyQueryResult* _tmp17_ = NULL;
+		gchar* _tmp18_ = NULL;
+		gchar* task_note = NULL;
+		SQLHeavyQueryResult* _tmp19_ = NULL;
+		gchar* _tmp20_ = NULL;
+		GDateTime* task_date = NULL;
+		gchar* _tmp21_ = NULL;
+		SQLHeavyQueryResult* _tmp22_ = NULL;
+		gchar* _tmp23_ = NULL;
+		gchar* _tmp24_ = NULL;
+		gchar* _tmp25_ = NULL;
+		gboolean _tmp26_ = FALSE;
+		gchar* _tmp33_ = NULL;
+		SQLHeavyQueryResult* _tmp34_ = NULL;
+		gchar* _tmp35_ = NULL;
+		gboolean task_is_done = FALSE;
+		gboolean _tmp36_ = FALSE;
+		const gchar* _tmp37_ = NULL;
+		gchar* _tmp38_ = NULL;
+		gchar* _tmp39_ = NULL;
+		gchar* _tmp40_ = NULL;
+		const gchar* _tmp41_ = NULL;
+		YatlaTask* _tmp42_ = NULL;
+		const gchar* _tmp43_ = NULL;
+		const gchar* _tmp44_ = NULL;
+		const gchar* _tmp47_ = NULL;
+		YatlaTask* _tmp48_ = NULL;
+		const gchar* _tmp49_ = NULL;
+		const gchar* _tmp50_ = NULL;
+		GDateTime* _tmp53_ = NULL;
+		YatlaTask* _tmp54_ = NULL;
+		GDateTime* _tmp55_ = NULL;
+		GDateTime* _tmp56_ = NULL;
+		gboolean _tmp59_ = FALSE;
+		YatlaTask* _tmp60_ = NULL;
+		gboolean _tmp61_ = FALSE;
+		gboolean _tmp62_ = FALSE;
+		const gchar* _tmp65_ = NULL;
+		const gchar* _tmp66_ = NULL;
+		gint _tmp67_ = 0;
+		gint _tmp68_ = 0;
+		gchar* _tmp69_ = NULL;
+		gchar* _tmp70_ = NULL;
+		gchar* _tmp71_ = NULL;
+		SQLHeavyTransaction* _tmp72_ = NULL;
+		SQLHeavyDatabase* _tmp73_ = NULL;
+		SQLHeavyTransaction* _tmp74_ = NULL;
+		SQLHeavyTransaction* _tmp75_ = NULL;
+		SQLHeavyQuery* _tmp76_ = NULL;
+		SQLHeavyTransaction* _tmp77_ = NULL;
+		const gchar* _tmp78_ = NULL;
+		SQLHeavyQuery* _tmp79_ = NULL;
+		SQLHeavyQuery* _tmp80_ = NULL;
+		const gchar* _tmp81_ = NULL;
+		YatlaTask* _tmp82_ = NULL;
+		const gchar* _tmp83_ = NULL;
+		const gchar* _tmp84_ = NULL;
+		const gchar* _tmp90_ = NULL;
+		YatlaTask* _tmp91_ = NULL;
+		const gchar* _tmp92_ = NULL;
+		const gchar* _tmp93_ = NULL;
+		GDateTime* _tmp99_ = NULL;
+		YatlaTask* _tmp100_ = NULL;
+		GDateTime* _tmp101_ = NULL;
+		GDateTime* _tmp102_ = NULL;
+		gboolean _tmp114_ = FALSE;
+		YatlaTask* _tmp115_ = NULL;
+		gboolean _tmp116_ = FALSE;
+		gboolean _tmp117_ = FALSE;
+		SQLHeavyQuery* _tmp124_ = NULL;
+		YatlaTask* _tmp125_ = NULL;
+		gint _tmp126_ = 0;
+		gint _tmp127_ = 0;
+		GValue* _tmp128_ = NULL;
+		SQLHeavyQuery* _tmp129_ = NULL;
+		SQLHeavyQueryResult* _tmp130_ = NULL;
+		SQLHeavyQueryResult* _tmp131_ = NULL;
+		SQLHeavyTransaction* _tmp132_ = NULL;
+		_tmp0_ = list_name;
+		_tmp1_ = g_strconcat ("SELECT * FROM `", _tmp0_, NULL);
+		_tmp2_ = _tmp1_;
+		_tmp3_ = g_strconcat (_tmp2_, "_tasks` WHERE id = (:id);", NULL);
+		_tmp4_ = _tmp3_;
+		_g_free0 (_tmp2_);
+		sql_command = _tmp4_;
+		_tmp6_ = self->priv->_database;
+		_tmp7_ = sql_command;
+		_tmp8_ = sql_heavy_query_new ((SQLHeavyQueryable*) _tmp6_, _tmp7_, &_inner_error_);
+		_tmp5_ = _tmp8_;
+		if (_inner_error_ != NULL) {
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp9_ = _tmp5_;
+		_tmp5_ = NULL;
+		_g_object_unref0 (self->priv->_query);
+		self->priv->_query = _tmp9_;
+		_tmp10_ = self->priv->_query;
+		_tmp11_ = task;
+		_tmp12_ = yatla_task_get_id (_tmp11_);
+		_tmp13_ = _tmp12_;
+		_tmp14_ = g_new0 (GValue, 1);
+		g_value_init (_tmp14_, G_TYPE_INT);
+		g_value_set_int (_tmp14_, _tmp13_);
+		sql_heavy_query_set (_tmp10_, ":id", _tmp14_, &_inner_error_);
+		__vala_GValue_free0 (_tmp14_);
+		if (_inner_error_ != NULL) {
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp15_ = self->priv->_query;
+		_tmp16_ = sql_heavy_query_execute (_tmp15_, NULL, &_inner_error_, NULL);
+		results = _tmp16_;
+		if (_inner_error_ != NULL) {
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp17_ = results;
+		_tmp18_ = sql_heavy_record_fetch_string ((SQLHeavyRecord*) _tmp17_, 1, &_inner_error_);
+		task_name = _tmp18_;
+		if (_inner_error_ != NULL) {
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp19_ = results;
+		_tmp20_ = sql_heavy_record_fetch_string ((SQLHeavyRecord*) _tmp19_, 2, &_inner_error_);
+		task_note = _tmp20_;
+		if (_inner_error_ != NULL) {
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp22_ = results;
+		_tmp23_ = sql_heavy_record_fetch_string ((SQLHeavyRecord*) _tmp22_, 3, &_inner_error_);
+		_tmp21_ = _tmp23_;
+		if (_inner_error_ != NULL) {
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp24_ = _tmp21_;
+		_tmp21_ = NULL;
+		_tmp25_ = _tmp24_;
+		_tmp26_ = g_strcmp0 (_tmp25_, "") != 0;
+		_g_free0 (_tmp25_);
+		if (_tmp26_) {
+			gchar* _tmp27_ = NULL;
+			SQLHeavyQueryResult* _tmp28_ = NULL;
+			gchar* _tmp29_ = NULL;
+			YatlaDateTime* _tmp30_ = NULL;
+			YatlaDateTime* _tmp31_ = NULL;
+			GDateTime* _tmp32_ = NULL;
+			_tmp28_ = results;
+			_tmp29_ = sql_heavy_record_fetch_string ((SQLHeavyRecord*) _tmp28_, 3, &_inner_error_);
+			_tmp27_ = _tmp29_;
+			if (_inner_error_ != NULL) {
+				_g_free0 (_tmp21_);
+				_g_date_time_unref0 (task_date);
+				_g_free0 (task_note);
+				_g_free0 (task_name);
+				_g_object_unref0 (results);
+				_g_object_unref0 (_tmp5_);
+				_g_free0 (sql_command);
+				if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+					goto __catch11_sql_heavy_error;
+				}
+				_g_free0 (_tmp21_);
+				_g_date_time_unref0 (task_date);
+				_g_free0 (task_note);
+				_g_free0 (task_name);
+				_g_object_unref0 (results);
+				_g_object_unref0 (_tmp5_);
+				_g_free0 (sql_command);
+				g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+				g_clear_error (&_inner_error_);
+				return FALSE;
+			}
+			_tmp30_ = yatla_date_time_new_from_string_with_format (_tmp27_, YATLA_DATE_TIME_DEFAULT_FORMAT);
+			_tmp31_ = _tmp30_;
+			_tmp32_ = yatla_date_time_get_datetime (_tmp31_);
+			_g_date_time_unref0 (task_date);
+			task_date = _tmp32_;
+			_g_object_unref0 (_tmp31_);
+			_g_free0 (_tmp27_);
+		} else {
+			_g_date_time_unref0 (task_date);
+			task_date = NULL;
+		}
+		_tmp34_ = results;
+		_tmp35_ = sql_heavy_record_fetch_string ((SQLHeavyRecord*) _tmp34_, 4, &_inner_error_);
+		_tmp33_ = _tmp35_;
+		if (_inner_error_ != NULL) {
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp36_ = bool_parse (_tmp33_);
+		task_is_done = _tmp36_;
+		_tmp37_ = list_name;
+		_tmp38_ = g_strconcat ("UPDATE `", _tmp37_, NULL);
+		_tmp39_ = _tmp38_;
+		_tmp40_ = g_strconcat (_tmp39_, "_tasks` SET ", NULL);
+		_g_free0 (sql_command);
+		sql_command = _tmp40_;
+		_g_free0 (_tmp39_);
+		_tmp41_ = task_name;
+		_tmp42_ = task;
+		_tmp43_ = yatla_task_get_name (_tmp42_);
+		_tmp44_ = _tmp43_;
+		if (g_strcmp0 (_tmp41_, _tmp44_) != 0) {
+			const gchar* _tmp45_ = NULL;
+			gchar* _tmp46_ = NULL;
+			_tmp45_ = sql_command;
+			_tmp46_ = g_strconcat (_tmp45_, "name = (:new_name),", NULL);
+			_g_free0 (sql_command);
+			sql_command = _tmp46_;
+		}
+		_tmp47_ = task_note;
+		_tmp48_ = task;
+		_tmp49_ = yatla_task_get_note (_tmp48_);
+		_tmp50_ = _tmp49_;
+		if (g_strcmp0 (_tmp47_, _tmp50_) != 0) {
+			const gchar* _tmp51_ = NULL;
+			gchar* _tmp52_ = NULL;
+			_tmp51_ = sql_command;
+			_tmp52_ = g_strconcat (_tmp51_, "note = (:new_note),", NULL);
+			_g_free0 (sql_command);
+			sql_command = _tmp52_;
+		}
+		_tmp53_ = task_date;
+		_tmp54_ = task;
+		_tmp55_ = yatla_task_get_date (_tmp54_);
+		_tmp56_ = _tmp55_;
+		if (_tmp53_ != _tmp56_) {
+			const gchar* _tmp57_ = NULL;
+			gchar* _tmp58_ = NULL;
+			_tmp57_ = sql_command;
+			_tmp58_ = g_strconcat (_tmp57_, "date = (:new_date),", NULL);
+			_g_free0 (sql_command);
+			sql_command = _tmp58_;
+		}
+		_tmp59_ = task_is_done;
+		_tmp60_ = task;
+		_tmp61_ = yatla_task_get_is_done (_tmp60_);
+		_tmp62_ = _tmp61_;
+		if (_tmp59_ != _tmp62_) {
+			const gchar* _tmp63_ = NULL;
+			gchar* _tmp64_ = NULL;
+			_tmp63_ = sql_command;
+			_tmp64_ = g_strconcat (_tmp63_, "is_done = (:new_is_done),", NULL);
+			_g_free0 (sql_command);
+			sql_command = _tmp64_;
+		}
+		_tmp65_ = sql_command;
+		_tmp66_ = sql_command;
+		_tmp67_ = strlen (_tmp66_);
+		_tmp68_ = _tmp67_;
+		_tmp69_ = string_substring (_tmp65_, (glong) 0, (glong) (_tmp68_ - 1));
+		_tmp70_ = _tmp69_;
+		_tmp71_ = g_strconcat (_tmp70_, " WHERE id = (:id);", NULL);
+		_g_free0 (sql_command);
+		sql_command = _tmp71_;
+		_g_free0 (_tmp70_);
+		_tmp73_ = self->priv->_database;
+		_tmp74_ = sql_heavy_queryable_begin_transaction ((SQLHeavyQueryable*) _tmp73_, &_inner_error_);
+		_tmp72_ = _tmp74_;
+		if (_inner_error_ != NULL) {
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp75_ = _tmp72_;
+		_tmp72_ = NULL;
+		_g_object_unref0 (self->priv->_transaction);
+		self->priv->_transaction = _tmp75_;
+		_tmp77_ = self->priv->_transaction;
+		_tmp78_ = sql_command;
+		_tmp79_ = sql_heavy_queryable_prepare ((SQLHeavyQueryable*) _tmp77_, _tmp78_, &_inner_error_);
+		_tmp76_ = _tmp79_;
+		if (_inner_error_ != NULL) {
+			_g_object_unref0 (_tmp72_);
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_object_unref0 (_tmp72_);
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp80_ = _tmp76_;
+		_tmp76_ = NULL;
+		_g_object_unref0 (self->priv->_query);
+		self->priv->_query = _tmp80_;
+		_tmp81_ = task_name;
+		_tmp82_ = task;
+		_tmp83_ = yatla_task_get_name (_tmp82_);
+		_tmp84_ = _tmp83_;
+		if (g_strcmp0 (_tmp81_, _tmp84_) != 0) {
+			SQLHeavyQuery* _tmp85_ = NULL;
+			YatlaTask* _tmp86_ = NULL;
+			const gchar* _tmp87_ = NULL;
+			const gchar* _tmp88_ = NULL;
+			GValue* _tmp89_ = NULL;
+			_tmp85_ = self->priv->_query;
+			_tmp86_ = task;
+			_tmp87_ = yatla_task_get_name (_tmp86_);
+			_tmp88_ = _tmp87_;
+			_tmp89_ = g_new0 (GValue, 1);
+			g_value_init (_tmp89_, G_TYPE_STRING);
+			g_value_set_string (_tmp89_, _tmp88_);
+			sql_heavy_query_set (_tmp85_, ":new_name", _tmp89_, &_inner_error_);
+			__vala_GValue_free0 (_tmp89_);
+			if (_inner_error_ != NULL) {
+				_g_object_unref0 (_tmp76_);
+				_g_object_unref0 (_tmp72_);
+				_g_free0 (_tmp33_);
+				_g_free0 (_tmp21_);
+				_g_date_time_unref0 (task_date);
+				_g_free0 (task_note);
+				_g_free0 (task_name);
+				_g_object_unref0 (results);
+				_g_object_unref0 (_tmp5_);
+				_g_free0 (sql_command);
+				if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+					goto __catch11_sql_heavy_error;
+				}
+				_g_object_unref0 (_tmp76_);
+				_g_object_unref0 (_tmp72_);
+				_g_free0 (_tmp33_);
+				_g_free0 (_tmp21_);
+				_g_date_time_unref0 (task_date);
+				_g_free0 (task_note);
+				_g_free0 (task_name);
+				_g_object_unref0 (results);
+				_g_object_unref0 (_tmp5_);
+				_g_free0 (sql_command);
+				g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+				g_clear_error (&_inner_error_);
+				return FALSE;
+			}
+		}
+		_tmp90_ = task_note;
+		_tmp91_ = task;
+		_tmp92_ = yatla_task_get_note (_tmp91_);
+		_tmp93_ = _tmp92_;
+		if (g_strcmp0 (_tmp90_, _tmp93_) != 0) {
+			SQLHeavyQuery* _tmp94_ = NULL;
+			YatlaTask* _tmp95_ = NULL;
+			const gchar* _tmp96_ = NULL;
+			const gchar* _tmp97_ = NULL;
+			GValue* _tmp98_ = NULL;
+			_tmp94_ = self->priv->_query;
+			_tmp95_ = task;
+			_tmp96_ = yatla_task_get_note (_tmp95_);
+			_tmp97_ = _tmp96_;
+			_tmp98_ = g_new0 (GValue, 1);
+			g_value_init (_tmp98_, G_TYPE_STRING);
+			g_value_set_string (_tmp98_, _tmp97_);
+			sql_heavy_query_set (_tmp94_, ":new_note", _tmp98_, &_inner_error_);
+			__vala_GValue_free0 (_tmp98_);
+			if (_inner_error_ != NULL) {
+				_g_object_unref0 (_tmp76_);
+				_g_object_unref0 (_tmp72_);
+				_g_free0 (_tmp33_);
+				_g_free0 (_tmp21_);
+				_g_date_time_unref0 (task_date);
+				_g_free0 (task_note);
+				_g_free0 (task_name);
+				_g_object_unref0 (results);
+				_g_object_unref0 (_tmp5_);
+				_g_free0 (sql_command);
+				if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+					goto __catch11_sql_heavy_error;
+				}
+				_g_object_unref0 (_tmp76_);
+				_g_object_unref0 (_tmp72_);
+				_g_free0 (_tmp33_);
+				_g_free0 (_tmp21_);
+				_g_date_time_unref0 (task_date);
+				_g_free0 (task_note);
+				_g_free0 (task_name);
+				_g_object_unref0 (results);
+				_g_object_unref0 (_tmp5_);
+				_g_free0 (sql_command);
+				g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+				g_clear_error (&_inner_error_);
+				return FALSE;
+			}
+		}
+		_tmp99_ = task_date;
+		_tmp100_ = task;
+		_tmp101_ = yatla_task_get_date (_tmp100_);
+		_tmp102_ = _tmp101_;
+		if (_tmp99_ != _tmp102_) {
+			YatlaTask* _tmp103_ = NULL;
+			GDateTime* _tmp104_ = NULL;
+			GDateTime* _tmp105_ = NULL;
+			_tmp103_ = task;
+			_tmp104_ = yatla_task_get_date (_tmp103_);
+			_tmp105_ = _tmp104_;
+			if (_tmp105_ == NULL) {
+				SQLHeavyQuery* _tmp106_ = NULL;
+				GValue* _tmp107_ = NULL;
+				_tmp106_ = self->priv->_query;
+				_tmp107_ = g_new0 (GValue, 1);
+				g_value_init (_tmp107_, G_TYPE_STRING);
+				g_value_set_string (_tmp107_, "");
+				sql_heavy_query_set (_tmp106_, ":new_date", _tmp107_, &_inner_error_);
+				__vala_GValue_free0 (_tmp107_);
+				if (_inner_error_ != NULL) {
+					_g_object_unref0 (_tmp76_);
+					_g_object_unref0 (_tmp72_);
+					_g_free0 (_tmp33_);
+					_g_free0 (_tmp21_);
+					_g_date_time_unref0 (task_date);
+					_g_free0 (task_note);
+					_g_free0 (task_name);
+					_g_object_unref0 (results);
+					_g_object_unref0 (_tmp5_);
+					_g_free0 (sql_command);
+					if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+						goto __catch11_sql_heavy_error;
+					}
+					_g_object_unref0 (_tmp76_);
+					_g_object_unref0 (_tmp72_);
+					_g_free0 (_tmp33_);
+					_g_free0 (_tmp21_);
+					_g_date_time_unref0 (task_date);
+					_g_free0 (task_note);
+					_g_free0 (task_name);
+					_g_object_unref0 (results);
+					_g_object_unref0 (_tmp5_);
+					_g_free0 (sql_command);
+					g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+					g_clear_error (&_inner_error_);
+					return FALSE;
+				}
+			} else {
+				SQLHeavyQuery* _tmp108_ = NULL;
+				YatlaTask* _tmp109_ = NULL;
+				GDateTime* _tmp110_ = NULL;
+				GDateTime* _tmp111_ = NULL;
+				gchar* _tmp112_ = NULL;
+				GValue* _tmp113_ = NULL;
+				_tmp108_ = self->priv->_query;
+				_tmp109_ = task;
+				_tmp110_ = yatla_task_get_date (_tmp109_);
+				_tmp111_ = _tmp110_;
+				_tmp112_ = g_date_time_to_string (_tmp111_);
+				_tmp113_ = g_new0 (GValue, 1);
+				g_value_init (_tmp113_, G_TYPE_STRING);
+				g_value_take_string (_tmp113_, _tmp112_);
+				sql_heavy_query_set (_tmp108_, ":new_date", _tmp113_, &_inner_error_);
+				__vala_GValue_free0 (_tmp113_);
+				if (_inner_error_ != NULL) {
+					_g_object_unref0 (_tmp76_);
+					_g_object_unref0 (_tmp72_);
+					_g_free0 (_tmp33_);
+					_g_free0 (_tmp21_);
+					_g_date_time_unref0 (task_date);
+					_g_free0 (task_note);
+					_g_free0 (task_name);
+					_g_object_unref0 (results);
+					_g_object_unref0 (_tmp5_);
+					_g_free0 (sql_command);
+					if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+						goto __catch11_sql_heavy_error;
+					}
+					_g_object_unref0 (_tmp76_);
+					_g_object_unref0 (_tmp72_);
+					_g_free0 (_tmp33_);
+					_g_free0 (_tmp21_);
+					_g_date_time_unref0 (task_date);
+					_g_free0 (task_note);
+					_g_free0 (task_name);
+					_g_object_unref0 (results);
+					_g_object_unref0 (_tmp5_);
+					_g_free0 (sql_command);
+					g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+					g_clear_error (&_inner_error_);
+					return FALSE;
+				}
+			}
+		}
+		_tmp114_ = task_is_done;
+		_tmp115_ = task;
+		_tmp116_ = yatla_task_get_is_done (_tmp115_);
+		_tmp117_ = _tmp116_;
+		if (_tmp114_ != _tmp117_) {
+			SQLHeavyQuery* _tmp118_ = NULL;
+			YatlaTask* _tmp119_ = NULL;
+			gboolean _tmp120_ = FALSE;
+			gboolean _tmp121_ = FALSE;
+			gchar* _tmp122_ = NULL;
+			GValue* _tmp123_ = NULL;
+			_tmp118_ = self->priv->_query;
+			_tmp119_ = task;
+			_tmp120_ = yatla_task_get_is_done (_tmp119_);
+			_tmp121_ = _tmp120_;
+			_tmp122_ = bool_to_string (_tmp121_);
+			_tmp123_ = g_new0 (GValue, 1);
+			g_value_init (_tmp123_, G_TYPE_STRING);
+			g_value_take_string (_tmp123_, _tmp122_);
+			sql_heavy_query_set (_tmp118_, ":new_is_done", _tmp123_, &_inner_error_);
+			__vala_GValue_free0 (_tmp123_);
+			if (_inner_error_ != NULL) {
+				_g_object_unref0 (_tmp76_);
+				_g_object_unref0 (_tmp72_);
+				_g_free0 (_tmp33_);
+				_g_free0 (_tmp21_);
+				_g_date_time_unref0 (task_date);
+				_g_free0 (task_note);
+				_g_free0 (task_name);
+				_g_object_unref0 (results);
+				_g_object_unref0 (_tmp5_);
+				_g_free0 (sql_command);
+				if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+					goto __catch11_sql_heavy_error;
+				}
+				_g_object_unref0 (_tmp76_);
+				_g_object_unref0 (_tmp72_);
+				_g_free0 (_tmp33_);
+				_g_free0 (_tmp21_);
+				_g_date_time_unref0 (task_date);
+				_g_free0 (task_note);
+				_g_free0 (task_name);
+				_g_object_unref0 (results);
+				_g_object_unref0 (_tmp5_);
+				_g_free0 (sql_command);
+				g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+				g_clear_error (&_inner_error_);
+				return FALSE;
+			}
+		}
+		_tmp124_ = self->priv->_query;
+		_tmp125_ = task;
+		_tmp126_ = yatla_task_get_id (_tmp125_);
+		_tmp127_ = _tmp126_;
+		_tmp128_ = g_new0 (GValue, 1);
+		g_value_init (_tmp128_, G_TYPE_INT);
+		g_value_set_int (_tmp128_, _tmp127_);
+		sql_heavy_query_set (_tmp124_, ":id", _tmp128_, &_inner_error_);
+		__vala_GValue_free0 (_tmp128_);
+		if (_inner_error_ != NULL) {
+			_g_object_unref0 (_tmp76_);
+			_g_object_unref0 (_tmp72_);
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_object_unref0 (_tmp76_);
+			_g_object_unref0 (_tmp72_);
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp129_ = self->priv->_query;
+		_tmp130_ = sql_heavy_query_execute (_tmp129_, NULL, &_inner_error_, NULL);
+		_tmp131_ = _tmp130_;
+		_g_object_unref0 (_tmp131_);
+		if (_inner_error_ != NULL) {
+			_g_object_unref0 (_tmp76_);
+			_g_object_unref0 (_tmp72_);
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_object_unref0 (_tmp76_);
+			_g_object_unref0 (_tmp72_);
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		_tmp132_ = self->priv->_transaction;
+		sql_heavy_transaction_commit (_tmp132_, &_inner_error_);
+		if (_inner_error_ != NULL) {
+			_g_object_unref0 (_tmp76_);
+			_g_object_unref0 (_tmp72_);
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			if (_inner_error_->domain == SQL_HEAVY_ERROR) {
+				goto __catch11_sql_heavy_error;
+			}
+			_g_object_unref0 (_tmp76_);
+			_g_object_unref0 (_tmp72_);
+			_g_free0 (_tmp33_);
+			_g_free0 (_tmp21_);
+			_g_date_time_unref0 (task_date);
+			_g_free0 (task_note);
+			_g_free0 (task_name);
+			_g_object_unref0 (results);
+			_g_object_unref0 (_tmp5_);
+			_g_free0 (sql_command);
+			g_critical ("file %s: line %d: unexpected error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+			g_clear_error (&_inner_error_);
+			return FALSE;
+		}
+		result = TRUE;
+		_g_object_unref0 (_tmp76_);
+		_g_object_unref0 (_tmp72_);
+		_g_free0 (_tmp33_);
+		_g_free0 (_tmp21_);
+		_g_date_time_unref0 (task_date);
+		_g_free0 (task_note);
+		_g_free0 (task_name);
+		_g_object_unref0 (results);
+		_g_object_unref0 (_tmp5_);
+		_g_free0 (sql_command);
+		return result;
+	}
+	goto __finally11;
+	__catch11_sql_heavy_error:
+	{
+		GError* e = NULL;
+		FILE* _tmp133_ = NULL;
+		FILE* _tmp134_ = NULL;
+		GError* _tmp135_ = NULL;
+		const gchar* _tmp136_ = NULL;
+		e = _inner_error_;
+		_inner_error_ = NULL;
+		_tmp133_ = stdout;
+		fprintf (_tmp133_, "Error updating the task");
+		_tmp134_ = stdout;
+		_tmp135_ = e;
+		_tmp136_ = _tmp135_->message;
+		fprintf (_tmp134_, "Error : %s\n", _tmp136_);
+		result = FALSE;
+		_g_error_free0 (e);
+		return result;
+	}
+	__finally11:
+	g_critical ("file %s: line %d: uncaught error: %s (%s, %d)", __FILE__, __LINE__, _inner_error_->message, g_quark_to_string (_inner_error_->domain), _inner_error_->code);
+	g_clear_error (&_inner_error_);
+	return FALSE;
+}
+
+
 gboolean yatla_database_remove_task (YatlaDatabase* self, YatlaTask* task, const gchar* list_name) {
 	gboolean result = FALSE;
 	g_return_val_if_fail (self != NULL, FALSE);

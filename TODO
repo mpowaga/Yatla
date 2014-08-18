@@ -3,9 +3,9 @@
  ☐ make the code more efficient, BACKUP SUCKS
  ☐ when you create a task, make sure, task name doesn't repeat
  ☐ resize signal check_resize.connect ()
+ ☐ delete button border when the button is clicked
  ☐ add the notification's pop ups
  ☐ solve the problem with importing the database (the problem is after import, i select an item an it writes that gtk_container_remove couldn't be done, still the programm works normally)
- ☐ find out how to use Gdk.EventConfigure
  ☐ add a button which calls task_preferences, only when tooltip opens
  ☐ task_preference two types: 1) to create a task 
                                2) to edit a task

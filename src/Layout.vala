@@ -7,26 +7,42 @@ namespace Yatla
 {
 	public class Layout : Gtk.Layout
 	{
-		internal  Gtk.Label       _list_name;
-		internal  Gtk.Box         _top_box1;
+		internal  Gtk.Label		  _list_name;
+		internal  Gtk.Box 		  _top_box1;
 		internal  Gtk.Box   	  _top_box2;
-		internal  Gtk.Box 	  	  _tasks_box;
+		internal  Gtk.Box 		  _tasks_box;
 		internal  Yatla.Database  _database;
 		internal  string          _name;
 
 		public  Gtk.Entry  new_task_entry;
-		public  Gee.TreeMap<Yatla.Task, Gtk.CheckButton>  tasks;
+		public  Gee.TreeMap<Yatla.Task, Gtk.Box>  tasks;
 
 		public Layout(Yatla.Database database) 
 		{
 			this._database = database;
-			tasks = new Gee.TreeMap<Yatla.Task, Gtk.CheckButton> ((a, b) => 
+			tasks = new Gee.TreeMap<Yatla.Task, Gtk.Box> ((a, b) => 
 			{ 
 				if (b.id > a.id) 	return -1;
 				else 				return  1;  
 			});
 
-			// make smth beautiful with css
+			/** stuff with css, actually the needed stuff now, I've done with markup, see lower *//*
+			var css_stuff = """
+			GtkButton:hover 
+			{
+			}
+			""";
+			var provider = new Gtk.CssProvider ();
+
+			try 
+			{
+				provider.load_from_data (css_stuff, css_stuff.length);
+				Gtk.StyleContext.add_provider_for_screen (Gdk.Screen.get_default (), provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+			} 
+			catch (Error e) 
+			{
+				stderr.printf ("Error: %s\n", e.message);
+			}*/
 		}
 
 		/**
@@ -48,23 +64,23 @@ namespace Yatla
 			_top_box1 = new Gtk.Box (Gtk.Orientation.VERTICAL, 10);
 			_list_name = new Gtk.Label (list_name);
 			_list_name.use_markup = true;
-            		_list_name.set_markup ("""<span font='14'><b>%s</b></span>""".printf (_list_name.get_text ()));
+            _list_name.set_markup ("""<span font='14'><b>%s</b></span>""".printf (_list_name.get_text ()));
 			_top_box1.pack_start (_list_name);
 			
 			_top_box2 = new Gtk.Box (Gtk.Orientation.VERTICAL, 10);
 			new_task_entry = new Gtk.Entry ();
 			new_task_entry.set_placeholder_text ("Add new task");
 			/** maybe will use my custom image ... set_icon_from_image_name */
-			new_task_entry.set_icon_from_stock (Gtk.EntryIconPosition.SECONDARY, "gtk-edit");
+			new_task_entry.set_icon_from_stock (Gtk.EntryIconPosition.SECONDARY, "gtk-add");
 			_top_box2.pack_start (new_task_entry);
 
 			_tasks_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 10);
 
 			var list_index = 0;
 			foreach (Yatla.List list in sidebar.sidebar_list)
-    		{  
-    			if (list.name == list_name)		break;
-    			list_index++;
+            {  
+            	if (list.name == list_name)		break;
+            	list_index++;
 			}
 
 			var task_index = 0;
@@ -90,19 +106,40 @@ namespace Yatla
 
 				var checkBox = new Gtk.CheckButton.with_label (task_name);
 				checkBox.set_active (task_is_done);
-				checkBox.has_tooltip = true;
-				checkBox.query_tooltip.connect ((x, y, keyboad_tooltip, tooltip) =>  
+				if (checkBox.active)
 				{
-					if (task_note == "")	return false;
-					else
-					{
-						tooltip.set_text (task_note);
-						// show task_preferences button
-					    	return true;
-					}
+					var list = checkBox.get_children ();
+					(list.nth_data (0) as Gtk.Label).set_use_markup (true);
+					(list.nth_data (0) as Gtk.Label).set_markup ("""<span strikethrough="true" color="#b2b2b2">%s</span>""".printf (checkBox.label));
+					task.is_done = true;
+				}
+				else
+				{
+					var list = checkBox.get_children ();
+					(list.nth_data (0) as Gtk.Label).set_use_markup (false);
+					(list.nth_data (0) as Gtk.Label).label = checkBox.label;
+					task.is_done = false;
+				}
+				checkBox.set_tooltip_text (task_note);
+
+				/** created a horizontal box in order to place chechbox and an edit button */
+				var task_horizontal_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+				var task_preferences_button = new Gtk.Button.from_icon_name ("gtk-edit", Gtk.IconSize.SMALL_TOOLBAR);
+				task_preferences_button.relief = Gtk.ReliefStyle.NONE;
+				task_preferences_button.focus_on_click = false;
+				task_preferences_button.xalign = 1.0f;
+				task_preferences_button.set_size_request (20, 20);
+
+				task_preferences_button.clicked.connect (() => 
+				{
+					var task_preferences = new Yatla.TaskPreferences (Yatla.TaskPreferencesType.CHANGE, this, _database, sidebar, task, list_name);
+					task_preferences.show ();
 				});
-				tasks.@set (task, checkBox);
-				_tasks_box.pack_start (checkBox);
+
+				task_horizontal_box.pack_start (checkBox);
+				task_horizontal_box.pack_end   (task_preferences_button);
+				tasks.@set (task, task_horizontal_box);
+				_tasks_box.pack_start (task_horizontal_box);
 
 				task_index++;
 			}
@@ -116,20 +153,32 @@ namespace Yatla
 
 			new_task_entry.icon_press.connect ((pos, event) => 
 			{
-				var task_preferences = new Yatla.TaskPreferences (this, _database, sidebar, new_task_entry.text, list_name);
+				var task_preferences = new Yatla.TaskPreferences (Yatla.TaskPreferencesType.CREATE, this, _database, sidebar, new Yatla.Task (new_task_entry.text, null, null), list_name);
 				task_preferences.show ();
 			});
 
 			var map_iterator = tasks.map_iterator ();
 			while (map_iterator.next ())
 			{
-				var checkBox = map_iterator.get_value ();
+				var checkBox = map_iterator.get_value ().get_children ().nth_data(0) as Gtk.CheckButton;
 				var task     = map_iterator.get_key ();
 
 				checkBox.notify["active"].connect (() =>
 				{	
-					if (checkBox.active)	task.is_done = true;
-					else 					task.is_done = false;
+					if (checkBox.active)
+					{
+						var list = checkBox.get_children ();
+						(list.nth_data (0) as Gtk.Label).set_use_markup (true);
+						(list.nth_data (0) as Gtk.Label).set_markup ("""<span strikethrough="true" color="#b2b2b2">%s</span>""".printf (checkBox.label));
+						task.is_done = true;
+					}
+					else
+					{
+						var list = checkBox.get_children ();
+						(list.nth_data (0) as Gtk.Label).set_use_markup (false);
+						(list.nth_data (0) as Gtk.Label).label = checkBox.label;
+						task.is_done = false;
+					} 					
 				});
 			}
 

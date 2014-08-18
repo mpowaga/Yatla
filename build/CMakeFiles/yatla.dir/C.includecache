@@ -6,21 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/home/denis631/yatla/build/src/Layout.c
+/home/denis631/yatla/build/src/Database.c
 glib.h
 -
 glib-object.h
 -
-gtk/gtk.h
+SQLHeavy.h
 -
 stdlib.h
 -
 string.h
 -
-gee.h
+stdio.h
 -
-granite.h
--
-gdk/gdk.h
+glib/gstdio.h
 -
 

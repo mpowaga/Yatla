@@ -400,13 +400,13 @@ namespace Yatla
 		 * @return true  : if updating was successful
 		 *         false : if updating wasn't successful
 		 */
-		/*public bool update_task (Yatla.Task task, string list_name)
+		public bool update_task (Yatla.Task task, string list_name)
 		{
 			try 
 			{
 				var sql_command = "SELECT * FROM `" + list_name + "_tasks` WHERE id = (:id);";
 				_query = new SQLHeavy.Query (_database, sql_command);
-				_query[":id"] = task.id; 
+				_query[":id"] = task.id;
 				var results   = _query.execute ();
 
 				var task_name = results.fetch_string (1);
@@ -452,7 +452,7 @@ namespace Yatla
 				stdout.printf ("Error : %s\n", e.message);
 				return false;
 			}
-		}*/
+		}
 
 		public bool remove_task (Yatla.Task task, string list_name)
 		{

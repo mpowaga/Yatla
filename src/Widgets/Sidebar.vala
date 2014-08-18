@@ -43,6 +43,54 @@ namespace Yatla
             }
 		}
 
+		public void update_task (string list_name, Yatla.Task task_to_update)
+		{
+			var list_index = 0;
+			foreach (Yatla.List list in sidebar_list)
+            {  
+            	if (list.name == list_name)		break;
+            	list_index++;
+			}
+
+			foreach (Yatla.Task task in sidebar_list.nth_data (list_index).tasks)
+            {
+            	if (task.id == task_to_update.id)
+            	{
+            		task.name    = task_to_update.name;
+            		task.note    = task_to_update.note;
+            		task.date    = task_to_update.date;
+            		task.is_done = task_to_update.is_done;
+            	}
+            } 
+		}
+
+		public void remove_task (string list_name, Yatla.Task task_to_remove)
+		{
+			var list_index = 0;
+			foreach (Yatla.List list in sidebar_list)
+            {  
+            	if (list.name == list_name)		break;
+            	list_index++;
+			}
+
+			foreach (Yatla.Task task in sidebar_list.nth_data (list_index).tasks)
+            {
+            	if (task.id == task_to_remove.id)
+            	{
+            		sidebar_list.nth_data (list_index).tasks.remove (task_to_remove);
+            		break;
+            	}
+            }
+
+			foreach (Granite.Widgets.SourceList.Item item in root.children)
+            {   if (item.name == list_name)
+            	{
+					if (item.badge == "1")		item.badge = null;
+					else 						item.badge = (int.parse(item.badge) - 1).to_string ();  
+            	}		
+            }            
+		}
+
 		public void update_list (Yatla.Task[] tasks, string list_name)
 		{
 			var list_index = 0;

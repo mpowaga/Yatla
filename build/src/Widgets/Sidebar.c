@@ -120,7 +120,8 @@ void yatla_sidebar_add_task (YatlaSidebar* self, YatlaDatabase* database, const 
 gint yatla_database_get_task_id (YatlaDatabase* self, const gchar* task_name, const gchar* list_name);
 const gchar* yatla_task_get_name (YatlaTask* self);
 void yatla_task_set_id (YatlaTask* self, gint value);
-void yatla_sidebar_update_list (YatlaSidebar* self, YatlaTask** tasks, int tasks_length1, const gchar* list_name);
+void yatla_sidebar_update_task (YatlaSidebar* self, const gchar* list_name, YatlaTask* task_to_update);
+gint yatla_task_get_id (YatlaTask* self);
 void yatla_task_set_name (YatlaTask* self, const gchar* value);
 const gchar* yatla_task_get_note (YatlaTask* self);
 void yatla_task_set_note (YatlaTask* self, const gchar* value);
@@ -128,6 +129,8 @@ GDateTime* yatla_task_get_date (YatlaTask* self);
 void yatla_task_set_date (YatlaTask* self, GDateTime* value);
 gboolean yatla_task_get_is_done (YatlaTask* self);
 void yatla_task_set_is_done (YatlaTask* self, gboolean value);
+void yatla_sidebar_remove_task (YatlaSidebar* self, const gchar* list_name, YatlaTask* task_to_remove);
+void yatla_sidebar_update_list (YatlaSidebar* self, YatlaTask** tasks, int tasks_length1, const gchar* list_name);
 static void yatla_sidebar_finalize (GObject* obj);
 enum  {
 	YATLA_SIDEBAR_ITEM_DUMMY_PROPERTY
@@ -329,6 +332,279 @@ void yatla_sidebar_add_task (YatlaSidebar* self, YatlaDatabase* database, const 
 					_tmp44_ = _tmp43_;
 					granite_widgets_source_list_item_set_badge (_tmp38_, _tmp44_);
 					_g_free0 (_tmp44_);
+				}
+			}
+			_g_object_unref0 (item);
+		}
+		_g_object_unref0 (_item_it);
+	}
+}
+
+
+void yatla_sidebar_update_task (YatlaSidebar* self, const gchar* list_name, YatlaTask* task_to_update) {
+	gint list_index = 0;
+	GList* _tmp0_ = NULL;
+	GList* _tmp7_ = NULL;
+	gint _tmp8_ = 0;
+	gconstpointer _tmp9_ = NULL;
+	GList* _tmp10_ = NULL;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (list_name != NULL);
+	g_return_if_fail (task_to_update != NULL);
+	list_index = 0;
+	_tmp0_ = self->sidebar_list;
+	{
+		GList* list_collection = NULL;
+		GList* list_it = NULL;
+		list_collection = _tmp0_;
+		for (list_it = list_collection; list_it != NULL; list_it = list_it->next) {
+			YatlaList* _tmp1_ = NULL;
+			YatlaList* list = NULL;
+			_tmp1_ = _g_object_ref0 ((YatlaList*) list_it->data);
+			list = _tmp1_;
+			{
+				YatlaList* _tmp2_ = NULL;
+				const gchar* _tmp3_ = NULL;
+				const gchar* _tmp4_ = NULL;
+				const gchar* _tmp5_ = NULL;
+				gint _tmp6_ = 0;
+				_tmp2_ = list;
+				_tmp3_ = yatla_list_get_name (_tmp2_);
+				_tmp4_ = _tmp3_;
+				_tmp5_ = list_name;
+				if (g_strcmp0 (_tmp4_, _tmp5_) == 0) {
+					_g_object_unref0 (list);
+					break;
+				}
+				_tmp6_ = list_index;
+				list_index = _tmp6_ + 1;
+				_g_object_unref0 (list);
+			}
+		}
+	}
+	_tmp7_ = self->sidebar_list;
+	_tmp8_ = list_index;
+	_tmp9_ = g_list_nth_data (_tmp7_, (guint) _tmp8_);
+	_tmp10_ = ((YatlaList*) _tmp9_)->tasks;
+	{
+		GList* task_collection = NULL;
+		GList* task_it = NULL;
+		task_collection = _tmp10_;
+		for (task_it = task_collection; task_it != NULL; task_it = task_it->next) {
+			YatlaTask* _tmp11_ = NULL;
+			YatlaTask* task = NULL;
+			_tmp11_ = _g_object_ref0 ((YatlaTask*) task_it->data);
+			task = _tmp11_;
+			{
+				YatlaTask* _tmp12_ = NULL;
+				gint _tmp13_ = 0;
+				gint _tmp14_ = 0;
+				YatlaTask* _tmp15_ = NULL;
+				gint _tmp16_ = 0;
+				gint _tmp17_ = 0;
+				_tmp12_ = task;
+				_tmp13_ = yatla_task_get_id (_tmp12_);
+				_tmp14_ = _tmp13_;
+				_tmp15_ = task_to_update;
+				_tmp16_ = yatla_task_get_id (_tmp15_);
+				_tmp17_ = _tmp16_;
+				if (_tmp14_ == _tmp17_) {
+					YatlaTask* _tmp18_ = NULL;
+					YatlaTask* _tmp19_ = NULL;
+					const gchar* _tmp20_ = NULL;
+					const gchar* _tmp21_ = NULL;
+					YatlaTask* _tmp22_ = NULL;
+					YatlaTask* _tmp23_ = NULL;
+					const gchar* _tmp24_ = NULL;
+					const gchar* _tmp25_ = NULL;
+					YatlaTask* _tmp26_ = NULL;
+					YatlaTask* _tmp27_ = NULL;
+					GDateTime* _tmp28_ = NULL;
+					GDateTime* _tmp29_ = NULL;
+					YatlaTask* _tmp30_ = NULL;
+					YatlaTask* _tmp31_ = NULL;
+					gboolean _tmp32_ = FALSE;
+					gboolean _tmp33_ = FALSE;
+					_tmp18_ = task;
+					_tmp19_ = task_to_update;
+					_tmp20_ = yatla_task_get_name (_tmp19_);
+					_tmp21_ = _tmp20_;
+					yatla_task_set_name (_tmp18_, _tmp21_);
+					_tmp22_ = task;
+					_tmp23_ = task_to_update;
+					_tmp24_ = yatla_task_get_note (_tmp23_);
+					_tmp25_ = _tmp24_;
+					yatla_task_set_note (_tmp22_, _tmp25_);
+					_tmp26_ = task;
+					_tmp27_ = task_to_update;
+					_tmp28_ = yatla_task_get_date (_tmp27_);
+					_tmp29_ = _tmp28_;
+					yatla_task_set_date (_tmp26_, _tmp29_);
+					_tmp30_ = task;
+					_tmp31_ = task_to_update;
+					_tmp32_ = yatla_task_get_is_done (_tmp31_);
+					_tmp33_ = _tmp32_;
+					yatla_task_set_is_done (_tmp30_, _tmp33_);
+				}
+				_g_object_unref0 (task);
+			}
+		}
+	}
+}
+
+
+void yatla_sidebar_remove_task (YatlaSidebar* self, const gchar* list_name, YatlaTask* task_to_remove) {
+	gint list_index = 0;
+	GList* _tmp0_ = NULL;
+	GList* _tmp7_ = NULL;
+	gint _tmp8_ = 0;
+	gconstpointer _tmp9_ = NULL;
+	GList* _tmp10_ = NULL;
+	g_return_if_fail (self != NULL);
+	g_return_if_fail (list_name != NULL);
+	g_return_if_fail (task_to_remove != NULL);
+	list_index = 0;
+	_tmp0_ = self->sidebar_list;
+	{
+		GList* list_collection = NULL;
+		GList* list_it = NULL;
+		list_collection = _tmp0_;
+		for (list_it = list_collection; list_it != NULL; list_it = list_it->next) {
+			YatlaList* _tmp1_ = NULL;
+			YatlaList* list = NULL;
+			_tmp1_ = _g_object_ref0 ((YatlaList*) list_it->data);
+			list = _tmp1_;
+			{
+				YatlaList* _tmp2_ = NULL;
+				const gchar* _tmp3_ = NULL;
+				const gchar* _tmp4_ = NULL;
+				const gchar* _tmp5_ = NULL;
+				gint _tmp6_ = 0;
+				_tmp2_ = list;
+				_tmp3_ = yatla_list_get_name (_tmp2_);
+				_tmp4_ = _tmp3_;
+				_tmp5_ = list_name;
+				if (g_strcmp0 (_tmp4_, _tmp5_) == 0) {
+					_g_object_unref0 (list);
+					break;
+				}
+				_tmp6_ = list_index;
+				list_index = _tmp6_ + 1;
+				_g_object_unref0 (list);
+			}
+		}
+	}
+	_tmp7_ = self->sidebar_list;
+	_tmp8_ = list_index;
+	_tmp9_ = g_list_nth_data (_tmp7_, (guint) _tmp8_);
+	_tmp10_ = ((YatlaList*) _tmp9_)->tasks;
+	{
+		GList* task_collection = NULL;
+		GList* task_it = NULL;
+		task_collection = _tmp10_;
+		for (task_it = task_collection; task_it != NULL; task_it = task_it->next) {
+			YatlaTask* _tmp11_ = NULL;
+			YatlaTask* task = NULL;
+			_tmp11_ = _g_object_ref0 ((YatlaTask*) task_it->data);
+			task = _tmp11_;
+			{
+				YatlaTask* _tmp12_ = NULL;
+				gint _tmp13_ = 0;
+				gint _tmp14_ = 0;
+				YatlaTask* _tmp15_ = NULL;
+				gint _tmp16_ = 0;
+				gint _tmp17_ = 0;
+				_tmp12_ = task;
+				_tmp13_ = yatla_task_get_id (_tmp12_);
+				_tmp14_ = _tmp13_;
+				_tmp15_ = task_to_remove;
+				_tmp16_ = yatla_task_get_id (_tmp15_);
+				_tmp17_ = _tmp16_;
+				if (_tmp14_ == _tmp17_) {
+					GList* _tmp18_ = NULL;
+					gint _tmp19_ = 0;
+					gconstpointer _tmp20_ = NULL;
+					YatlaTask* _tmp21_ = NULL;
+					_tmp18_ = self->sidebar_list;
+					_tmp19_ = list_index;
+					_tmp20_ = g_list_nth_data (_tmp18_, (guint) _tmp19_);
+					_tmp21_ = task_to_remove;
+					((YatlaList*) _tmp20_)->tasks = g_list_remove (((YatlaList*) _tmp20_)->tasks, _tmp21_);
+					_g_object_unref0 (task);
+					break;
+				}
+				_g_object_unref0 (task);
+			}
+		}
+	}
+	{
+		GeeIterator* _item_it = NULL;
+		GraniteWidgetsSourceListExpandableItem* _tmp22_ = NULL;
+		GraniteWidgetsSourceListExpandableItem* _tmp23_ = NULL;
+		GeeCollection* _tmp24_ = NULL;
+		GeeCollection* _tmp25_ = NULL;
+		GeeCollection* _tmp26_ = NULL;
+		GeeIterator* _tmp27_ = NULL;
+		GeeIterator* _tmp28_ = NULL;
+		_tmp22_ = granite_widgets_source_list_get_root ((GraniteWidgetsSourceList*) self);
+		_tmp23_ = _tmp22_;
+		_tmp24_ = granite_widgets_source_list_expandable_item_get_children (_tmp23_);
+		_tmp25_ = _tmp24_;
+		_tmp26_ = _tmp25_;
+		_tmp27_ = gee_iterable_iterator ((GeeIterable*) _tmp26_);
+		_tmp28_ = _tmp27_;
+		_g_object_unref0 (_tmp26_);
+		_item_it = _tmp28_;
+		while (TRUE) {
+			GeeIterator* _tmp29_ = NULL;
+			gboolean _tmp30_ = FALSE;
+			GraniteWidgetsSourceListItem* item = NULL;
+			GeeIterator* _tmp31_ = NULL;
+			gpointer _tmp32_ = NULL;
+			GraniteWidgetsSourceListItem* _tmp33_ = NULL;
+			const gchar* _tmp34_ = NULL;
+			const gchar* _tmp35_ = NULL;
+			const gchar* _tmp36_ = NULL;
+			_tmp29_ = _item_it;
+			_tmp30_ = gee_iterator_next (_tmp29_);
+			if (!_tmp30_) {
+				break;
+			}
+			_tmp31_ = _item_it;
+			_tmp32_ = gee_iterator_get (_tmp31_);
+			item = (GraniteWidgetsSourceListItem*) _tmp32_;
+			_tmp33_ = item;
+			_tmp34_ = granite_widgets_source_list_item_get_name (_tmp33_);
+			_tmp35_ = _tmp34_;
+			_tmp36_ = list_name;
+			if (g_strcmp0 (_tmp35_, _tmp36_) == 0) {
+				GraniteWidgetsSourceListItem* _tmp37_ = NULL;
+				const gchar* _tmp38_ = NULL;
+				const gchar* _tmp39_ = NULL;
+				_tmp37_ = item;
+				_tmp38_ = granite_widgets_source_list_item_get_badge (_tmp37_);
+				_tmp39_ = _tmp38_;
+				if (g_strcmp0 (_tmp39_, "1") == 0) {
+					GraniteWidgetsSourceListItem* _tmp40_ = NULL;
+					_tmp40_ = item;
+					granite_widgets_source_list_item_set_badge (_tmp40_, NULL);
+				} else {
+					GraniteWidgetsSourceListItem* _tmp41_ = NULL;
+					GraniteWidgetsSourceListItem* _tmp42_ = NULL;
+					const gchar* _tmp43_ = NULL;
+					const gchar* _tmp44_ = NULL;
+					gint _tmp45_ = 0;
+					gchar* _tmp46_ = NULL;
+					gchar* _tmp47_ = NULL;
+					_tmp41_ = item;
+					_tmp42_ = item;
+					_tmp43_ = granite_widgets_source_list_item_get_badge (_tmp42_);
+					_tmp44_ = _tmp43_;
+					_tmp45_ = atoi (_tmp44_);
+					_tmp46_ = g_strdup_printf ("%i", _tmp45_ - 1);
+					_tmp47_ = _tmp46_;
+					granite_widgets_source_list_item_set_badge (_tmp41_, _tmp47_);
+					_g_free0 (_tmp47_);
 				}
 			}
 			_g_object_unref0 (item);
