@@ -10,7 +10,7 @@ namespace Yatla
 		internal  Gtk.Label       _list_name;
 		internal  Gtk.Box         _top_box1;
 		internal  Gtk.Box   	  _top_box2;
-		internal  Gtk.Box 	  _tasks_box;
+		internal  Gtk.Box 	  	  _tasks_box;
 		internal  Yatla.Database  _database;
 		internal  string          _name;
 
@@ -23,7 +23,7 @@ namespace Yatla
 			tasks = new Gee.TreeMap<Yatla.Task, Gtk.CheckButton> ((a, b) => 
 			{ 
 				if (b.id > a.id) 	return -1;
-				else 			return  1;  
+				else 				return  1;  
 			});
 
 			// make smth beautiful with css
@@ -62,9 +62,9 @@ namespace Yatla
 
 			var list_index = 0;
 			foreach (Yatla.List list in sidebar.sidebar_list)
-            		{  
-            			if (list.name == list_name)		break;
-            			list_index++;
+    		{  
+    			if (list.name == list_name)		break;
+    			list_index++;
 			}
 
 			var task_index = 0;
@@ -129,7 +129,7 @@ namespace Yatla
 				checkBox.notify["active"].connect (() =>
 				{	
 					if (checkBox.active)	task.is_done = true;
-					else 			task.is_done = false;
+					else 					task.is_done = false;
 				});
 			}
 
@@ -175,7 +175,7 @@ namespace Yatla
 		{
 			_list_name.label = list_name;
 			_list_name.use_markup = true;
-            		_list_name.set_markup ("""<span font='14'><b>%s</b></span>""".printf (_list_name.get_text ()));
+            _list_name.set_markup ("""<span font='14'><b>%s</b></span>""".printf (_list_name.get_text ()));
 		}
 	}
 }
