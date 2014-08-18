@@ -1,3 +1,0 @@
-# Hashes of file build rules.
-9dd3add30e2dca3be403c3e5e130ca32 src/Yatla.c
-95df0c78e9603fbf0f0a57ddfd5b267e vala.stamp
